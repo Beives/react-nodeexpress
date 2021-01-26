@@ -14,10 +14,28 @@ router.get("/zenekarok",(req,res)=>{
         }
     });
 });
+router.get("/zenekarok/:id",(req,res)=>{
+    con.query("SELECT * FROM zenekar WHERE id = ?",[req.params.id], (err,rows,fields)=>{
+        if (!err) {
+            res.json(rows);
+        }else{
+            console.log("get hiba");
+        }
+    });
+});
 
 //get szinpadok
 router.get("/szinpad",(req,res)=>{
     con.query("SELECT * FROM szinpad", (err,rows,fields)=>{
+        if (!err) {
+            res.json(rows);
+        }else{
+            console.log("get hiba");
+        }
+    });
+});
+router.get("/szinpad/:id",(req,res)=>{
+    con.query("SELECT * FROM szinpad WHERE id = ?",[req.params.id], (err,rows,fields)=>{
         if (!err) {
             res.json(rows);
         }else{
@@ -36,10 +54,28 @@ router.get("/tomeg",(req,res)=>{
         }
     });
 });
+router.get("/tomeg/:id",(req,res)=>{
+    con.query("SELECT * FROM tomeg WHERE id = ?",[req.params.id], (err,rows,fields)=>{
+        if (!err) {
+            res.json(rows);
+        }else{
+            console.log("get hiba");
+        }
+    });
+});
 
 //get idosavok
 router.get("/ido",(req,res)=>{
     con.query("SELECT * FROM idosavok", (err,rows,fields)=>{
+        if (!err) {
+            res.json(rows);
+        }else{
+            console.log("get hiba");
+        }
+    });
+});
+router.get("/ido/:id",(req,res)=>{
+    con.query("SELECT * FROM idosavok WHERE id = ?",[req.params.id], (err,rows,fields)=>{
         if (!err) {
             res.json(rows);
         }else{
@@ -95,6 +131,25 @@ router.post("/add",(req,res)=>{
     con.query(sql, function(err,result){
         if (err) throw err;
         res.send("Felvétel sikerült");
+    });
+});
+
+//update
+router.post("/update/:id",(req,res)=>{
+    var insertData = {
+        zenekar : req.body.zenekar,
+        ido : req.body.ido,
+        szinpad : req.body.szinpad,
+        tomeg : req.body.tomeg
+    };
+
+    var sql = SqlString.format('UPDATE koncertek SET ?',insertData);
+    sql+=" WHERE id="+req.body.id;
+    console.log(sql);
+
+    con.query(sql, function(err,result){
+        if (err) throw err;
+        res.send("Módosítás sikerült");
     });
 });
 

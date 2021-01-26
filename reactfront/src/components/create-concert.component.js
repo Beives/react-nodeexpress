@@ -94,8 +94,12 @@ export default class CreateConcert extends Component{
         }
         console.log(koncert);
         axios.post('http://localhost:5000/add', koncert)
-        .then(res=>console.log(res.data));
-        window.location = '/';
+        .then(res=>{
+            console.log(res.data)
+            if (res.data === "Felvétel sikerült") {
+                window.location = '/';
+            }
+        });
     }
 
     render(){

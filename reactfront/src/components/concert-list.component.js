@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom';
 const Concert = props => {
     return(
         <tr>
-        <td>{props.concert.zenekar}</td>
-        <td>{props.concert.ido}</td>
-        <td>{props.concert.szinpad}</td>
-        <td>{props.concert.tomeg}</td>
-        <td>
-            <Link to={"/edit/"+props.concert.id}>Módosítás</Link> | <a href="#" onClick={() => { props.deleteConcert(props.concert.id) }}>Törlés</a>
-        </td>
-    </tr>
+            <td>{props.concert.zenekar}</td>
+            <td>{props.concert.ido}</td>
+            <td>{props.concert.szinpad}</td>
+            <td>{props.concert.tomeg}</td>
+            <td>
+                <Link to={"/edit/"+props.concert.id}>Módosítás</Link> | <button className="btn btn-danger" onClick={() => { props.deleteConcert(props.concert.id) }}>Törlés</button>
+            </td>
+        </tr>
     )
 }
 
@@ -22,7 +22,13 @@ export default class ConcertList extends Component{
 
         this.deleteConcert = this.deleteConcert.bind(this);
 
-        this.state = {concerts: []}
+        this.state = {
+            concerts: [],
+            zenekarok: [],
+            szinpadok: [],
+            idosavok: [],
+            tomegek: []
+        }
     }
 
     componentDidMount(){
@@ -33,7 +39,27 @@ export default class ConcertList extends Component{
         .catch((error)=>{
             console.log(error)
         })
-    }
+
+        axios.get('http://localhost:5000/zenekarok/')
+        .then(response =>{
+            this.setState({zenekarok: response.data})
+        })
+
+        axios.get('http://localhost:5000/ido/')
+        .then(response =>{
+            this.setState({szinpadok: response.data})
+        })
+
+        axios.get('http://localhost:5000/szinpad/')
+        .then(response =>{
+            this.setState({idosavok: response.data})
+        })
+
+        axios.get('http://localhost:5000/tomeg/')
+        .then(response =>{
+            this.setState({tomegek: response.data})
+        })
+        }
 
     deleteConcert(id){
         axios.delete('http://localhost:5000/'+id)
@@ -45,7 +71,11 @@ export default class ConcertList extends Component{
 
     concertList(){
         return this.state.concerts.map(currentConcert => {
-            return <Concert concert={currentConcert} deleteConcert={this.deleteConcert} key={currentConcert._id}/>;
+            return <Concert
+             concert={currentConcert} 
+             zenekarok={this.state.zenekarok}
+             deleteConcert={this.deleteConcert} 
+             key={currentConcert.id}/>;
           })
     }
 
