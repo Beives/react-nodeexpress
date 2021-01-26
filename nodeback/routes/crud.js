@@ -14,15 +14,6 @@ router.get("/zenekarok",(req,res)=>{
         }
     });
 });
-router.get("/zenekarok/:id",(req,res)=>{
-    con.query("SELECT * FROM zenekar WHERE id = ?",[req.params.id], (err,rows,fields)=>{
-        if (!err) {
-            res.json(rows);
-        }else{
-            console.log("get hiba");
-        }
-    });
-});
 
 //get szinpadok
 router.get("/szinpad",(req,res)=>{
@@ -34,15 +25,7 @@ router.get("/szinpad",(req,res)=>{
         }
     });
 });
-router.get("/szinpad/:id",(req,res)=>{
-    con.query("SELECT * FROM szinpad WHERE id = ?",[req.params.id], (err,rows,fields)=>{
-        if (!err) {
-            res.json(rows);
-        }else{
-            console.log("get hiba");
-        }
-    });
-});
+
 
 //get tomeg
 router.get("/tomeg",(req,res)=>{
@@ -54,15 +37,7 @@ router.get("/tomeg",(req,res)=>{
         }
     });
 });
-router.get("/tomeg/:id",(req,res)=>{
-    con.query("SELECT * FROM tomeg WHERE id = ?",[req.params.id], (err,rows,fields)=>{
-        if (!err) {
-            res.json(rows);
-        }else{
-            console.log("get hiba");
-        }
-    });
-});
+
 
 //get idosavok
 router.get("/ido",(req,res)=>{
@@ -74,19 +49,16 @@ router.get("/ido",(req,res)=>{
         }
     });
 });
-router.get("/ido/:id",(req,res)=>{
-    con.query("SELECT * FROM idosavok WHERE id = ?",[req.params.id], (err,rows,fields)=>{
-        if (!err) {
-            res.json(rows);
-        }else{
-            console.log("get hiba");
-        }
-    });
-});
+
 
 //get all
 router.get("/",(req,res)=>{
-    con.query("SELECT * FROM koncertek", (err,rows,fields)=>{
+    let sql = "SELECT koncertek.id, zenekar.nev, idosavok.idosav,szinpad.megnevezes,tomeg.kozonseg FROM koncertek \
+    INNER JOIN zenekar ON koncertek.zenekar = zenekar.id \
+    INNER JOIN idosavok ON koncertek.ido = idosavok.id \
+    INNER JOIN szinpad ON koncertek.szinpad = szinpad.id \
+    INNER JOIN tomeg ON koncertek.tomeg = tomeg.id";
+    con.query(sql, (err,rows,fields)=>{
         if (!err) {
             res.json(rows);
         }else{
@@ -145,7 +117,6 @@ router.post("/update/:id",(req,res)=>{
 
     var sql = SqlString.format('UPDATE koncertek SET ?',insertData);
     sql+=" WHERE id="+req.body.id;
-    console.log(sql);
 
     con.query(sql, function(err,result){
         if (err) throw err;
