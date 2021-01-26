@@ -4,6 +4,50 @@ const con = require("../connection");
 const router = express.Router();
 const SqlString = require('sqlstring');
 
+//get zenekarok
+router.get("/zenekarok",(req,res)=>{
+    con.query("SELECT * FROM zenekar", (err,rows,fields)=>{
+        if (!err) {
+            res.json(rows);
+        }else{
+            console.log("get hiba");
+        }
+    });
+});
+
+//get szinpadok
+router.get("/szinpad",(req,res)=>{
+    con.query("SELECT * FROM szinpad", (err,rows,fields)=>{
+        if (!err) {
+            res.json(rows);
+        }else{
+            console.log("get hiba");
+        }
+    });
+});
+
+//get tomeg
+router.get("/tomeg",(req,res)=>{
+    con.query("SELECT * FROM tomeg", (err,rows,fields)=>{
+        if (!err) {
+            res.json(rows);
+        }else{
+            console.log("get hiba");
+        }
+    });
+});
+
+//get idosavok
+router.get("/ido",(req,res)=>{
+    con.query("SELECT * FROM idosavok", (err,rows,fields)=>{
+        if (!err) {
+            res.json(rows);
+        }else{
+            console.log("get hiba");
+        }
+    });
+});
+
 //get all
 router.get("/",(req,res)=>{
     con.query("SELECT * FROM koncertek", (err,rows,fields)=>{
@@ -37,13 +81,13 @@ router.delete("/:id",(req,res)=>{
 });
 
 //insert
-router.post("/",(req,res)=>{
-
+router.post("/add",(req,res)=>{
+    
     var insertData = {
-        zenekar : req.body.Formdata.zenekar,
-        ido : req.body.Formdata.ido,
-        szinpad : req.body.Formdata.szinpad,
-        tomeg : req.body.Formdata.tomeg
+        zenekar : req.body.zenekar,
+        ido : req.body.ido,
+        szinpad : req.body.szinpad,
+        tomeg : req.body.tomeg
     };
 
     var sql = SqlString.format('INSERT INTO koncertek SET ?',insertData);
